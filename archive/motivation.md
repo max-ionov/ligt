@@ -1,6 +1,15 @@
 Generalizing over FLex RDF and Xigt
 ===
 
+Preliminaries
+---
+Objective is to develop a generalization over earlier RDF serializations of IGT data
+* [FLEx-RDF](https://github.com/acoli-repo/LLODifier/tree/master/flex)
+* [FLEx-RDF, Toolbox customization](https://github.com/acoli-repo/LLODifier/tree/master/toolbox)
+* [Xigt-RDF](https://github.com/acoli-repo/LLODifier/tree/master/xigt)
+
+These are isomorphic (faithful/direct/naive) renderings of XML data structures in RDF.
+
 Data, concepts
 ---
 
