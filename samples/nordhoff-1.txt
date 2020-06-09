@@ -1,0 +1,4 @@
+# posted 2020-06-09 by https://github.com/Glottotopia, https://github.com/acoli-repo/ligt/issues/2
+haste      nich  gesehen
+hast=du    nicht ge-seh-en
+have=2ps   NEG   PTCP-see-PTCP
