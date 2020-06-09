@@ -1,0 +1,245 @@
+################################################################################################################################################
+# Ligt (pronounce as /liXt/ or /li:t/) is a LLOD-native vocabulary for represeting Interlinear Glossed Text as RDF data                        #
+# Ligt is being developed by the BMBF-funded Research Group "Linked Open Dictionaries (LiODi)" (2015-2020) at the Goethe Universität Frankfurt #
+# under the supervision of Prof. Dr. Christian Chiarcos and Dr. des. Monika Rind-Pawlowski                                                     #
+# Ligt aims to provide a middle ground between LLOD vocabularies developed for other types of language resources (e.g., NIF, lemon), and       #
+# several popular legacy datamodels used to represent IGT data, most notably Toolbox, FLex and Xigt.                                           #
+################################################################################################################################################
+
+#
+# Ligt 0.1 core vocabulary
+#
+
+# history
+# 2017-03-18 ligt 0.1: initial RDFS formalization (CC)
+# 2017-03-25 ligt:Document *rdfs:subClassOf* ligt:Element (CC)
+# 2019-03-25 TTL+unicode validation (CC)
+
+# contributors
+# CC - Christian Chiarcos, christian.chiarcos@web.de
+
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ligt: <http://purl.org/ligt/ligt-0.1#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX dc: <http://purl.org/dc/terms/>
+
+#######################
+# core specifications #
+#######################
+
+ligt:Element a rdfs:Class;
+	rdfs:comment "Top-level concept for Ligt classes. Introduced to define the domain of ligt:metadata."@en.
+
+ligt:Document rdfs:subClassOf ligt:Element;
+	rdfs:comment "ligt:Document corresponds to root nodes in FLex and Xigt, i.e. flex:document and xigt:xigt-corpus"@en.
+
+ligt:hasText a owl:ObjectProperty;
+	rdfs:domain ligt:Document;
+	rdfs:range ligt:InterlinearText;
+	rdfs:comment "ligt:hasText assignes a ligt:Document one or multiple texts."@en.
+
+ligt:InterlinearText a rdfs:Class;
+    rdfs:subClassOf ligt:Segment;
+    rdfs:comment "A text represents a coherent assemblage of (mostly) consecutive utterances between which meaning relations can be established. In this function, ligt:InterlinearText corresponds to flex:interlinear-text. No Xigt counterpart because Xigt has not been designed for annotating full documents but rather isolated examples harvested from the literature. Nevertheless, this element is obligatory."@en.
+
+ligt:Segment rdfs:subClassOf ligt:Element;
+    rdfs:comment "Segment is a generalization over text-structural units at and above the level of individual glossed examples (utterances). In Toolbox, such elements can be added as free text (albeit no standard formalism exists). In FLex, these are flex:interlinear-text, flex:paragraph and flex:phrase."@en.
+	
+ligt:subSegment a owl:ObjectProperty;
+    rdfs:range ligt:Segment;
+	rdfs:domain ligt:Segment;
+	rdfs:comment "Hierarchical relations between text segments."@en.
+	
+ligt:nextSegment a owl:ObjectProperty;
+	rdfs:range ligt:Segment;
+	rdfs:domain ligt:Segment;
+	rdfs:comment "ligt:nextSegment should only hold between segments of the same type, or on the same hierarchy level, cf. ./following-sibling::*[1] in XPath."@en.
+	
+ligt:Paragraph a rdfs:Class;
+    rdfs:subClassOf ligt:Segment;
+    rdfs:comment "In written text, a paragraph represents a unit of text not divided by manual line breaks. In other modalities, a paragraph can be defined as a group of utterances in discourse that are thematically closely related, e.g., sharing the same theme or topic. ligt:Paragraph is derived from flex:Paragraph."@en.
+
+ligt:Utterance a rdfs:Class;
+    rdfs:subClassOf ligt:Segment;
+	rdfs:comment "A ligt:Utterance represents a single glossed example, often a sentence or a sentential fragment. We regard utterances as atomic, i.e., an utterance should not contain other utterances. ligt:Utterance corresponds to flex:phrase and xigt:igt. We avoid the term `phrase' here because it is ambiguous with `phrase' in the sense of `phrasal node' in syntax annotation (this seems to be the meaning of nif:Phrase)."@en;
+	rdfs:comment "TODO: prohibit ligt:subSegment for ligt:Utterance".
+
+ligt:hasTier a owl:ObjectProperty;
+	rdfs:domain ligt:Utterance;
+	rdfs:range ligt:Tier;
+	rdfs:comment "introduced to connect utterances with tiers (akin to igts in Xigt)."@en.
+
+ligt:Analysis rdfs:subClassOf ligt:Element;
+	rdfs:comment "Added as a generalization over ligt:Tier and ligt:Item (whose properties represent actual annotations) to define the domain of ligt:annotation."@en.
+	
+ligt:Tier a rdfs:Class;
+	rdfs:subClassOf ligt:Analysis;
+	rdfs:comment "A tier represents a layer of annotation. ligt:Tiers, however, can also represent bundles of annotations that refer to the same segment. In this sense (and different from Xigt), a ligt:Tier represents a segmented view on a ligt:Utterance. Note that normally, multiple Xigt tiers constitute a single ligt:Tier."@en;
+	rdfs:comment "TODO: at most one hasWords"@en.
+
+ligt:WordTier rdfs:subClassOf ligt:Tier;
+	rdfs:comment "A tier comprising word-level segments and their annotations. This tier is motivated by the special status of words in FLex."@en.
+	
+ligt:hasWords a owl:ObjectProperty;
+	rdfs:subPropertyOf ligt:hasTier;
+	rdfs:range ligt:WordTier.
+	
+ligt:hasMorphs a owl:ObjectProperty;
+	rdfs:subPropertyOf ligt:hasTier;
+	rdfs:range ligt:MorphTier.
+	
+ligt:item a owl:ObjectProperty;
+	rdfs:domain ligt:Tier;
+	rdfs:range ligt:Item.
+	
+ligt:Item a rdf:Class;
+	rdfs:subClassOf ligt:Analysis;
+	rdfs:comment "An item is an annotated unit in an IGT tier. The concept is grounded in Xigt, but unlike xigt:items, one ligt:Item may have multiple different annotations, then represented by annotation-specific properties."@en.
+	
+ligt:next a owl:ObjectProperty;
+	rdfs:range ligt:Item;
+	rdfs:domain ligt:Item;
+	rdfs:comment "Normally, a next property should only hold between elements of one tier. However, we do not have a way to enforce this."@en.
+
+ligt:nextMorph rdfs:subPropertyOf ligt:next;
+	a owl:ObjectProperty;
+	rdfs:range ligt:Morph;
+	rdfs:domain ligt:Morph.
+
+ligt:nextWord rdfs:subPropertyOf ligt:next;
+	a owl:ObjectProperty;
+	rdfs:range ligt:Word;
+	rdfs:domain ligt:Word.
+	
+ligt:Word rdfs:subClassOf ligt:Item;
+	rdfs:comment "A word is an orthographic correlate of minimal units of lexical or grammatical analysis in their respective syntactic context. ligt:Word is grounded in flex:Word."@en;
+	rdfs:comment "ligt:Word rdfs:subClassOf some ligt:WordTier ligt:item".
+	
+ligt:Morph rdfs:subClassOf ligt:Item;
+	rdfs:comment "A morph is a segment of a word that represents the smallest distinguishable meaningful unit, i.e., it represents the concrete instantiation of a morpheme. ligt:Morph is grounded on flex:morph."@en.
+	
+ligt:MorphTier rdfs:subClassOf ligt:Tier;
+	rdfs:comment "A tier of morphs, motivated by the special status of morphs in FLex."@en.
+	
+ligt:Prefix rdfs:subClassOf ligt:Morph;
+	rdfs:comment "Added in conformance with FLex."@en.
+	
+ligt:Stem rdfs:subClassOf ligt:Morph;
+	rdfs:comment "Added in conformance with FLex."@en.
+
+ligt:Suffix rdfs:subClassOf ligt:Morph;
+	rdfs:comment "Added in conformance with FLex."@en.
+
+ligt:Enclitic rdfs:subClassOf ligt:Morph;
+	rdfs:comment "Added in conformance with FLex."@en.
+	
+ligt:annotation a owl:DatatypeProperty;
+	rdfs:comment """ligt:annotation represents literal values assigned as annotations to items or tiers, annotations assigned to ligt:Segments are represented as ligt:metadata. This property should not be directly used, instead define subproperties detailing the kind of annotation.
+	Note that we do *not* support annotating ObjectProperties as these are no core functionality of IGTs and absent from FLex, Tool and Xigt core. Where these occur (e.g., in Xigt extensions), use additional properties beyond the ligt namespace."""@en;
+	rdfs:domain ligt:Analysis.
+	
+ligt:metadata a owl:DatatypeProperty;
+	rdfs:comment """Properties that express additional information about any kind of ligt:Element, without being limited to ligt:Item or ligt:Tier, are to be implemented by subproperties of ligt:metadata and ligt:metadataRef.
+	Ligt supports both literal and object metadata, with two properties ligt:metadata (cf. flex:comment) and ligt:metadataRef (cf. xigt:ref).	
+	We do not prescribe what kind of literals we expect as values. The current Xigt converter produces rdf:XMLLiterals, the FLex converter produces untyped literals."""@en;
+	rdfs:domain ligt:Element.
+	
+ligt:metadataRef a owl:ObjectProperty;
+	rdfs:comment """Properties that express additional information about any kind of ligt:Element, without being limited to ligt:Item or ligt:Tier, are to be implemented by subproperties of ligt:metadata and ligt:metadataRef.
+	Ligt supports both literal and object metadata, with two properties ligt:metadata (cf. flex:comment) and ligt:metadataRef (cf. xigt:ref)."""@en;
+	rdfs:domain ligt:Element.
+	
+ligt:Metadata a rdfs:Class;
+	rdfs:comment "ligt:Metadata is used for representing reified ligt:metadata, resp. ligt:metadataRef statements, with literal values being represented by ligt:metaBody, and object references by ligt:refBody. ligt:Metadata and its properties follow the Open Annotation/Web Annotation model."@en.
+	
+ligt:metaTarget a owl:ObjectProperty;
+	rdfs:comment "Representing the *source* of a reified ligt:metadataRef or ligt:metadata annotation. Grounded on oa:hasTarget, hence the counterintuitive terminology."@en;
+	rdfs:domain ligt:Metadata;
+	rdfs:range ligt:Element.
+	
+ligt:metaBody a owl:DatatypeProperty;
+	rdfs:comment "Representing the target of a reified ligt:metadata annotation. Grounded on oa:hasBody."@en;
+	rdfs:domain ligt:Metadata.
+
+ligt:refBody a owl:ObjectProperty;
+	rdfs:comment "Representing the target of a reified ligt:metadataRef annotation. Grounded on oa:hasBody."@en;
+	rdfs:domain ligt:Metadata.
+
+##########################
+# recommended vocabulary #
+##########################
+
+# We expect using skos:prefLabel or rdfs:label for representing the literal values
+# 
+	
+##################################
+# links to external vocabularies #
+# (commented)                    #
+##################################
+
+# Dublin Core
+#############
+
+ligt:Document rdfs:subClassOf dc:Dataset.
+ligt:hasText rdfs:subPropertyOf dc:hasPart.
+ligt:InterlinearText rdfs:subClassOf dc:Text.
+
+# NLP Interchange Format
+# (http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/nif-core.html)
+################################################################################
+
+ligt:Segment rdfs:subClassOf nif:String.
+ligt:subSegment rdfs:subPropertyOf nif:subString.
+
+# tier is something completely unprecedented, but we model it as a nif:String with extension identical to the ligt:Utterance it belongs to
+# this is modeled via constrains on ligt:hasTier
+# with RDFS reasoning, this allows for a transitive query for nif:subString from ligt:Segments to ligt:Items
+ligt:hasTier rdfs:subPropertyOf nif:subString, nif:superString.
+
+# this is not fully correct because Xigt has NullItems, these are strictly speaking no NIF Strings
+ligt:item rdfs:subPropertyOf nif:subString.
+
+# this is necessary because we want to model hierarchical relations between items as nif:subString
+ligt:Item rdfs:subClassOf nif:String.
+
+ligt:Word rdfs:subClassOf nif:Word.
+
+# Open Annotation / Web Annotation
+# (https://www.w3.org/TR/annotation-vocab/)
+###########################################
+
+ligt:Metadata rdfs:subClassOf oa:Annotation.
+ligt:metaTarget rdfs:subPropertyOf oa:hasTarget.
+ligt:metaBody rdfs:subPropertyOf oa:hasBody.
+ligt:refBody rdfs:subPropertyOf oa:hasBody.
+
+##############################
+# Remarks, open issues, etc. #
+##############################
+
+# to check: modeling tiers as rdf:Collection?
+# 
+# We aim to provide a loss-less generalization over FLex RDF and Xigt RDF. If information cannot be expressed by means of Ligt, we preserve the original triples.
+# Conversion between Ligt and XML formats should be done via their RDF representations, i.e.
+
+# import:
+# FLex XML ----LLODifier---> FLex RDF ----SPARQL update---> Ligt
+# Toolbox  ----LLODifier---> FLex RDF ----SPARQL update---> Ligt
+# Xigt XML ----LLODifier---> Xigt RDF ----SPARQL update---> Ligt
+# As a result of the import, we achieve at a consistent RDF representation as a suitable basis for evaluations and corpus querying against an RDF triple store.
+
+# export
+# Ligt ----SPARQL update---> Xigt RDF ----t.b.a.----> Xigt XML
+# The export functionality is intended to allow annotating Ligt glosses.
+# Lossless export of non-Xigt data to Xigt is not possible, so we do not aim for perfect roundtripping from Ligt > Xigt > Ligt
+# In particular, we cannot guarantee URI stability in such a roundtripping.
+# However, Xigt > Ligt > Xigt should be loss-less, except for the order of tiers with the same segmentation.
+
+# For the LLODifier component of the importers, see http://github.com/acoli-repo/LLODifier
+# The SPARQL update scripts for RDF manipulation of both import and export routines shall be provided with this package
+# The XML exporter could be implemented as an extension of the Xigt Python API: https://github.com/xigt/xigt/wiki/API-Reference
+# Exporters and SPARQL Update scripts are yet to be written.
