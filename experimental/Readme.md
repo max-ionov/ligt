@@ -11,4 +11,4 @@
   - oa:Annotation (with oa:target being the utterance and oa:body being the annotation, https://www.w3.org/TR/annotation-vocab/#web-annotation-ontology)
   - the consolidated linguistic annotation vocabulary currently developed by LD4LT (https://github.com/ld4lt/linguistic-annotation)
 - Utterances can remain nif:Strings
-- Inventory of typical annotations (e.g., ligt:gloss, ligt:morph, etc.)
+- Inventory of typical annotations (e.g., ligt:gloss, ligt:morph, etc.), e.g., based on FLEx hard-wired properties
