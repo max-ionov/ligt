@@ -61,7 +61,8 @@ ligt:InterlinearCollection a rdfs:Class;
 	# TODO: check the last sentence, maybe it's not always true (MI)
 
 ligt:Segment rdfs:subClassOf ligt:Element;
-    rdfs:comment "Segment is a generalization over text-structural units at and above the level of individual glossed examples (utterances). In Toolbox, such elements can be added as free text (albeit no standard formalism exists). In FLex, these are flex:interlinear-text, flex:paragraph and flex:phrase."@en.
+    rdfs:comment "Segment is a generalization over text-structural units at and above the level of individual glossed examples (utterances). In Toolbox, such elements can be added as free text (albeit no standard formalism exists). In FLex, these are flex:interlinear-text, flex:paragraph and flex:phrase."@en;
+	rdfs:comment """Note that our use of the term follows use of "segment" follows ISO 24612:2012 (https://www.iso.org/standard/37326.html, public description under https://www.cs.vassar.edu/~ide/papers/JNLE-rev.pdf). There is no direct relation with the term "phonological segment" as used in linguistic theory."""@en.
 	
 ligt:subSegment a owl:ObjectProperty;
     rdfs:range ligt:Segment;

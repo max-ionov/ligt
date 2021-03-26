@@ -1,0 +1,115 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ligt: <http://purl.org/ligt/ligt-0.2#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>
+PREFIX oa: <http://www.w3.org/ns/oa#>
+PREFIX dc: <http://purl.org/dc/terms/>
+
+# annotations
+# replace by your own vocabulary
+PREFIX my: <http://example.org/>
+
+# original example posted 2020-06-09 by https://github.com/Glottotopia, https://github.com/acoli-repo/ligt/issues/2
+# haste      nich  gesehen
+# hast=du    nicht ge-seh-en
+# have=2ps   NEG   PTCP-see-PTCP
+
+# we should use NIF URIs, blank nodes here for the convenience of modelling
+
+# utterance
+_:example a ligt:InterlinearText, ligt:Utterance;
+	nif:anchorOf "haste nich gesehen"@de;
+	ligt:hasTier _:words, _:morphs.
+
+# words
+_:words a ligt:WordTier;
+	nif:anchorOf "haste nich gesehen"@de;
+	ligt:item _:haste, _:nich, _:gesehen.
+
+_:haste a ligt:item;
+	nif:anchorOf "haste"@de;
+	ligt:next _:nich.
+	
+_:nich a ligt:item;
+	nif:anchorOf "nich"@de;
+	ligt:next _:gesehen.
+	
+_:gesehen a ligt:item;
+	nif:anchorOf "gesehen"@de.
+	
+# morphs
+_:morphs a ligt:MorphTier;
+	nif:anchorOf "haste nich gesehen"@de;
+	ligt:item _:hast, _:du, _:nicht, _:ge, _:seh, _:en.
+	
+_:hast a ligt:item;
+	nif:anchorOf "hast"@de;
+	ligt:next _:du;
+	nif:subString _:haste.
+
+_:du a ligt:item;
+	nif:anchorOf "e"@de;
+	ligt:next _:nicht;
+	nif:subString _:haste.
+
+_:nicht a ligt:item;
+	nif:anchorOf "nich"@de;
+	ligt:next _:ge;
+	nif:subString _:nich.
+	
+_:ge a ligt:item;
+	nif:anchorOf "ge"@de;
+	ligt:next _:seh;
+	nif:subString _:gesehen.
+
+_:seh a ligt:item;
+	nif:anchorOf "seh"@de;
+	ligt:next _:en;
+	nif:subString _:gesehen.
+	
+_:en a ligt:item;
+	nif:anchorOf "en"@de;
+	nif:subString _:gesehen.
+
+# word-level annotations
+my:morph1 
+	rdfs:subPropertyOf ligt:annotation;
+	rdfs:comment "morpheme segmentation, here applied to words".
+	
+my:gloss1
+	rdfs:subPropertyOf ligt:annotation;
+	rdfs:comment "morpheme glossing, here applied to words".
+
+_:haste my:morph1 "hast=du"; my:gloss1 "have=2ps".
+_:nich my:morph1 "nicht"; my:gloss1 "NEG".
+_:gesehen my:morph1 "ge-seh-en"; my:gloss1 "PTCP-see-PTCP".
+
+# morph-level annotations
+my:morph2 
+	rdfs:subPropertyOf ligt:annotation;
+	rdfs:comment "morpheme segmentation, here applied to morphs".
+	
+my:gloss2
+	rdfs:subPropertyOf ligt:annotation;
+	rdfs:comment "morpheme glossing, here applied to morphs".
+
+_:hast my:morph2 "hast"; my:gloss "have".
+_:du my:morph2 "=du"; my:gloss "=2ps".
+_:nicht my:morph2 "nicht"; my:gloss "NEG".
+
+_:ge my:morph2 "ge-"; my:gloss "PTCP-".
+_:seh my:morph2 "seh"; my:gloss "see".
+_:en my:morph2 "-en"; my:gloss "-PTCP".
+
+# remarks
+# We used blank nodes here to simplify the modelling. Using NIF
+# string URIs, the URIs for _:nicht (morph) and _:nich (word) 
+# would be identical, so that both entities would be conflated.
+# They can be disentangled by means of the layer as well as the preceding
+# and following element, but that can lead to confusion.
+# Future versions of LIGT should *not* be modelled as extensions of
+# NIF, but instead build on a vocabulary that allows to disentangle 
+# strings and markables.
+# We expect such a vocabulary to emerge in the W3C CG LD4LT:
+# https://github.com/ld4lt/linguistic-annotation
