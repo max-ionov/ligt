@@ -1,0 +1,686 @@
+@prefix : <http://purl.org/olia/unimorph.owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix unimorph: <http://purl.org/olia/unimorph.owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@base <http://purl.org/olia/unimorph.owl> .
+
+<http://purl.org/olia/unimorph.owl> rdf:type owl:Ontology ;
+                                    rdfs:isDefinedBy <http://unimorph.org>.
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://purl.org/olia/unimorph.owl#hasLabel
+
+:hasLabel rdf:type owl:DatatypeProperty .
+
+:hasLabelStartingWith rdfs:subPropertyOf :hasLabel; a owl:DatatypeProperty;
+	rdfs:comment "Introduced to account for extensible tags, in particular LGSPEC1..x".
+:hasLabelMatching rdf:type owl:DatatypeProperty; a owl:DatatypeProperty;
+	rdfs:comment "Introduced for matching against regular expressions".
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+:ArgumentFeature rdfs:subClassOf :MorphFeature; rdfs:label "argument marking".
+
+:ArgumentCase rdfs:subClassOf :ArgumentFeature.
+:ARGNO a :ArgumentCase; :hasLabelStartingWith "ARGNO"; rdfs:label "nominative case".
+:ARGAC a :ArgumentCase; :hasLabelStartingWith "ARGAC"; rdfs:label "accusative case".
+:ARGAB a :ArgumentCase; :hasLabelStartingWith "ARGAB"; rdfs:label "absolutive case".
+:ARGER a :ArgumentCase; :hasLabelStartingWith "ARGER"; rdfs:label "ergative case".
+:ARGDA a :ArgumentCase; :hasLabelStartingWith "ARGDA"; rdfs:label "dative case".
+:ARGBE a :ArgumentCase; :hasLabelStartingWith "ARGBE"; rdfs:label "benefactive case".
+
+:ArgumentPerson rdfs:subClassOf :ArgumentFeature.
+:ARG1 a :ArgumentPerson; :hasLabelMatching "ARG.*1.*"; rdfs:label "first person".
+:ARG2 a :ArgumentPerson; :hasLabelMatching "ARG.*2.*"; rdfs:label "second person".
+:ARG3 a :ArgumentPerson; :hasLabelMatching "ARG.*3.*"; rdfs:label "third person".
+
+:ArgumentNumber rdfs:subClassOf :ArgumentFeature.
+:ARGS a :ArgumentNumber; :hasLabelMatching "ARG.*[1-3]S"; rdfs:label "singular".
+:ARGP a :ArgumentNumber; :hasLabelMatching "ARG.*[1-3]P"; rdfs:label "plural".
+
+:ArgumentGender rdfs:subClassOf :ArgumentFeature.
+
+:DirectVoice rdfs:subClassOf :Voice.
+
+:ACT a :DirectVoice; :hasLabel "ACT"; rdfs:label "active".
+:PASS a :DirectVoice; :hasLabel "PASS"; rdfs:label "passive".
+:ANTIP a :DirectVoice; :hasLabel "ANTIP"; rdfs:label "antipassive".
+
+:BasicVoice rdfs:subClassOf :Voice.
+
+:MID a :DirectVoice, :BasicVoice; :hasLabel "MID"; rdfs:label "middle voice".
+	
+:PragmaticVoice rdfs:subClassOf :Voice.
+:DIR a :PragmaticVoice; :hasLabel "DIR"; rdfs:label "direct voice".
+:INV a :PragmaticVoice; :hasLabel "INV"; rdfs:label "inverse voice".
+:AGFOC a :PragmaticVoice; :hasLabel "AGFOC"; rdfs:label "agent focus".
+:PFOC a :PragmaticVoice; :hasLabel "PFOC"; rdfs:label "patient focus".
+:LFOC a :PragmaticVoice; :hasLabel "LFOC"; rdfs:label "location focus".
+:BFOC a :PragmaticVoice; :hasLabel "BFOC"; rdfs:label "beneficiary focus".
+:ACFOC a :PragmaticVoice; :hasLabel "ACFOC"; rdfs:label "accompanier focus".
+:IFOC a :PragmaticVoice; :hasLabel "IFOC"; rdfs:label "instrument focus".
+:CFOC a :PragmaticVoice; :hasLabel "CFOC"; rdfs:label "conveyed focus"; rdfs:comment """conveyed focus (CFOC; either by actual motion or in a linguistic sense, as by a speech act) (Rubino 2005:336-338, via Sylak-Glassman 2016, p.58)"""@en.
+	
+:Valency rdfs:subClassOf :MorphFeature; rdfs:label "valency", "arity".
+	
+:IMPRS a :Valency; :hasLabel "IMPRS"; rdfs:label "impersonal".
+:INTR a :Valency; :hasLabel "INTR"; rdfs:label "intransitive".
+:TR a :Valency; :hasLabel "TR"; rdfs:label "transitive".
+:DITR a :Valency; :hasLabel "DITR"; rdfs:label "ditransitive".
+:REFL a :Valency; :hasLabel "REFL"; rdfs:label "reflexive".
+:RECP a :Valency; :hasLabel "RECP"; rdfs:label "reciprocal".
+:CAUS a :Valency; :hasLabel "CAUS"; rdfs:label "causative".
+:APPL a :Valency; :hasLabel "APPL"; rdfs:label "applicative".
+
+:Tense rdfs:subClassOf :MorphFeature.
+	
+:PRS a :Tense; :hasLabel "PRS"; rdfs:label "present".
+:PST a :Tense; :hasLabel "PST"; rdfs:label "past".
+:FUT a :Tense; :hasLabel "FUT"; rdfs:label "future".
+:IMMED a :Tense; :hasLabel "IMMED"; rdfs:label "immediate"; rdfs:comment "immediate past or future".
+:HOD a :Tense; :hasLabel "HOD"; rdfs:label "hodiernal", "today"; rdfs:comment "today (past or future)".
+:oneDAY a :Tense; :hasLabel "1DAY"; rdfs:label "within 1 day"; rdfs:comment "within one day (past or future)".
+:RCT a :Tense; :hasLabel "RCT"; rdfs:label "recent"; rdfs:comment "recent past or near future".
+:RMT a :Tense; :hasLabel "RMT"; rdfs:label "remote"; rdfs:comment "remote past or future".
+
+:SwitchReferenceFeature rdfs:subClassOf :MorphFeature.
+
+:SS a :SwitchReferenceFeature; :hasLabel "SS"; rdfs:label "same subject".
+:SSADV a :SwitchReferenceFeature; :hasLabel "SSADV"; rdfs:label "same subject adverbial", "SS adverbial".
+:DS a :SwitchReferenceFeature; :hasLabel "DS"; rdfs:label "different subject".
+:DSADV a :SwitchReferenceFeature; :hasLabel "DSADV"; rdfs:label "different subject adverbial", "DS adverbial".
+
+:OR a :SwitchReferenceFeature; :hasLabel "OR"; rdfs:label "open reference".
+	
+:CN_R_MN a :SwitchReferenceFeature; :hasLabel "CN_R_MN"; rdfs:label "switch reference among NPs in any argument position".
+	
+:SIMMA a :SwitchReferenceFeature; :hasLabel "SIMMA"; rdfs:label "simultaneous multiclausal aspect".
+	
+:SEGMA a :SwitchReferenceFeature; :hasLabel "SEGMA"; rdfs:label "sequential multiclausal aspect".
+:LOG a :SwitchReferenceFeature; :hasLabel "LOG"; rdfs:label "logophoric".
+
+:PossessionFeature rdfs:subClassOf :MorphFeature.
+
+:ALN a :PossessionFeature; :hasLabel "ALN"; rdfs:label "alienable possession".
+:NALN a :PossessionFeature; :hasLabel "NALN"; rdfs:label "inalienable possession".
+:PSSD a :PossessionFeature; :hasLabel "PSSD"; rdfs:label "possessed".
+:PSS1S a :PossessionFeature; :hasLabel "PSS1S"; rdfs:label "Possession by 1.sg".
+:PSS2S a :PossessionFeature; :hasLabel "PSS2S"; rdfs:label "Possession by 2.sg".
+:PSS2SM a :PossessionFeature; :hasLabel "PSS2SM"; rdfs:label "Possession by 2.sg.masc".
+:PSS2SF a :PossessionFeature; :hasLabel "PSS2SF"; rdfs:label "Possession by 2.sg.fem".
+:PSS2SINFM a :PossessionFeature; :hasLabel "PSS2SINFM"; rdfs:label "Possession by 2.sg.infm".
+:PSS2SFORM a :PossessionFeature; :hasLabel "PSS2SFORM"; rdfs:label "Possession by 2.sg.form".
+:PSS3S a :PossessionFeature; :hasLabel "PSS3S"; rdfs:label "Possession by 3.sg".
+:PSS3SM a :PossessionFeature; :hasLabel "PSS3SM"; rdfs:label "Possession by 3.sg.masc".
+:PSS3SF a :PossessionFeature; :hasLabel "PSS3SF"; rdfs:label "Possession by 3.sg.fem".
+:PSS1D a :PossessionFeature; :hasLabel "PSS1D"; rdfs:label "Possession by 1.du".
+:PSS1DI a :PossessionFeature; :hasLabel "PSS1DI"; rdfs:label "Possession by 1.du.incl".
+:PSS1DE a :PossessionFeature; :hasLabel "PSS1DE"; rdfs:label "Possession by 1.du.excl".
+:PSS2D a :PossessionFeature; :hasLabel "PSS2D"; rdfs:label "Possession by 2.du".
+:PSS2DM a :PossessionFeature; :hasLabel "PSS2DM"; rdfs:label "Possession by 2.du.masc".
+:PSS2DF a :PossessionFeature; :hasLabel "PSS2DF"; rdfs:label "Possession by 2.du.fem".
+:PSS3D a :PossessionFeature; :hasLabel "PSS3D"; rdfs:label "Possession by 3.du".
+:PSS3DM a :PossessionFeature; :hasLabel "PSS3DM"; rdfs:label "Possession by 3.du.masc".
+:PSS3DF a :PossessionFeature; :hasLabel "PSS3DF"; rdfs:label "Possession by 3.du.fem".
+:PSS1P a :PossessionFeature; :hasLabel "PSS1P"; rdfs:label "Possession by 1.pl".
+:PSS1PI a :PossessionFeature; :hasLabel "PSS1PI"; rdfs:label "Possession by 1.pl.incl".
+:PSS1PE a :PossessionFeature; :hasLabel "PSS1PE"; rdfs:label "Possession by 1.pl.excl".
+:PSS2P a :PossessionFeature; :hasLabel "PSS2P"; rdfs:label "Possession by 2.pl".
+:PSS2PM a :PossessionFeature; :hasLabel "PSS2PM"; rdfs:label "Possession by 2.pl.masc".
+:PSS2PF a :PossessionFeature; :hasLabel "PSS2PF"; rdfs:label "Possession by 2.pl.fem".
+:PSS3P a :PossessionFeature; :hasLabel "PSS3P"; rdfs:label "Possession by 3.pl".
+:PSS3PM a :PossessionFeature; :hasLabel "PSS3PM"; rdfs:label "Possession by 3.pl.masc".
+:PSS3PF a :PossessionFeature; :hasLabel "PSS3PF"; rdfs:label "Possession by 3.pl.fem".
+
+:PolitenessFeature rdfs:subClassOf :MorphFeature;
+	rdfs:label "politeness", "respect".
+
+:ReferentHonorific rdfs:subClassOf :PolitenessFeature; rdfs:label "referent honorific", "speaker-referent honorific".
+	
+:INFM a :ReferentHonorific; :hasLabel "INFM"; rdfs:label "informal"; 
+	rdfs:comment """The T/V distinction in Indo-European gives evidence for two levels, informal and formal. (Sylak-Glassman 2016, p.43)"""@en.
+:Formal rdfs:subClassOf :ReferentHonorific; 
+	rdfs:comment """The T/V distinction in Indo-European gives evidence for two levels, informal and formal. ... Data from Japanese motivate positing two sublevels of the formal level. Japanese uses one set of referent honorific forms ... to elevate the referent and a distinct set of referent honorific forms ... to lower the speaker's status, thereby raising the referent's status by comparison (Wenger 1982:41-43).
+	
+	While the features for elevating (elev) and humbling (humb) are formally independent, they should be used only in conjunction with the form feature in the combinations form+elev and form+humb, respectively. (Sylak-Glassman 2016, p.43)"""@en.
+
+:FORM a :Formal; :hasLabel "FORM"; rdfs:label "formal".
+
+:FORM_ELEV a :Formal; :hasLabel "FORM+ELEV"; rdfs:label "formal, referent elevating".
+
+:FORM_HUMB a :Formal; :hasLabel "FORM+HUMB"; rdfs:label "formal, speaker humbling".
+
+:AddresseeHonorific rdfs:subClassOf :PolitenessFeature; rdfs:label "addressee honorific", "speaker-addressee honorific".
+:POL a :AddresseeHonorific; :hasLabel "POL"; rdfs:label "polite".
+:MPOL a :AddresseeHonorific; :hasLabel "MPOL"; rdfs:label "medium polite".
+
+:BystanderHonorific rdfs:subClassOf :PolitenessFeature; rdfs:label "bystander honorific", "speaker-bystander honorific".
+:AVOID a :BystanderHonorific; :hasLabel "AVOID"; rdfs:label "avoidance style".
+:LOW a :BystanderHonorific; :hasLabel "LOW"; rdfs:label "low status".
+:HIGH a :BystanderHonorific; :hasLabel "HIGH"; rdfs:label "high status".
+:STELEV a :BystanderHonorific; :hasLabel "STELEV"; rdfs:label "high status, elevated".
+:STSUPR a :BystanderHonorific; :hasLabel "STSUPR"; rdfs:label "high status, supreme".
+
+:Register rdfs:subClassOf :PolitenessFeature; rdfs:label "register", "speaker-setting politeness".
+:LIT a :Register; :hasLabel "LIT"; rdfs:label "literary register".
+:FOREG a :Register; :hasLabel "FOREG"; rdfs:label "formal register".
+:COL a :Register; :hasLabel "COL"; rdfs:label "colloquial".
+
+:Polarity rdfs:subClassOf :MorphFeature.
+	
+:POS a :Polarity; :hasLabel "POS"; rdfs:label "positive", "affirmative".
+:NEG a :Polarity; :hasLabel "NEG"; rdfs:label "negative".
+
+:Person rdfs:subClassOf :MorphFeature.
+
+:zeroPerson a :Person; :hasLabel "0"; rdfs:label "zero person".
+
+:firstPerson a :Person; :hasLabel "1"; rdfs:label "first person".
+:secondPerson a :Person; :hasLabel "2"; rdfs:label "second person".
+:thirdPerson a :Person; :hasLabel "3"; rdfs:label "third person".
+:fourthPerson a :Person; :hasLabel "4"; rdfs:label "fourth person".
+		
+:EXCL a :Person; :hasLabel "EXCL"; rdfs:label "exclusive".
+
+:PRX a :Person; :hasLabel "PRX"; rdfs:label "proximate".
+
+:OBV a :Person; :hasLabel "OBV"; rdfs:label "obviative".
+
+:GrammFunction a owl:Class;
+	owl:versionInfo "When discussing parts-of-speech as features of inflected words, Sylak-Glassman (2016, p.36) follows Croft (2000:89) in introducing grammatical functions as an orthogonal dimension to PartOfSpeech concepts. This is rendered here by GrammFunction and hasGrammFunction. -- CC".
+
+:reference a :GrammFunction.
+:modification a :GrammFunction.
+:predication a :GrammFunction.
+		
+:hasGrammFunction a owl:ObjectProperty;
+	owl:versionInfo "When discussing parts-of-speech as features of inflected words, Sylak-Glassman (2016, p.36) follows Croft (2000:89) in introducing grammatical functions as an orthogonal dimension to PartOfSpeech concepts. This is rendered here by GrammFunction and hasGrammFunction. -- CC";
+	rdfs:domain :GrammFunction.
+
+:PartOfSpeech rdfs:subClassOf :MorphFeature.
+
+:ObjectConcept rdfs:subClassOf :PartOfSpeech.
+:PropertyConcept rdfs:subClassOf :PartOfSpeech.
+:ActionConcept rdfs:subClassOf :PartOfSpeech.
+
+:Noun rdfs:subClassOf :ObjectConcept, 
+ [ owl:unionOf ( [ rdf:type owl:Restriction ;
+                               owl:onProperty :hasGrammFunction ;
+                               owl:hasValue :reference
+                             ]
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :hasGrammFunction ;
+                               owl:hasValue :predication
+                             ]
+                           )
+             ].
+
+:N a :Noun; :hasLabel "N"; rdfs:label "noun"; 
+	rdfs:comment """Nouns are a basic part of speech in the sense that they need not co-occur with any other part of speech and are not logically a subclass of any other part of speech. They typically control features such as number and gender and can bear case features, among other dimensions. Nouns, along with verbs, have been claimed to be universally instantiated across languages (Baker 2003). (Sylak-Glassman 2016, p.36)"""@en.
+
+:PROPN a :Noun;  :hasLabel "PROPN"; rdfs:label "proper name".
+
+:ADJ a :PropertyConcept; :hasLabel "ADJ"; rdfs:label "adjective";
+	owl:versionInfo "specifying grammatical functions is not necessary, as adjectives can occur in all functions according to Croft (2000:89). The function as property modifier is prototypical, though. -- CC".
+
+:PRO a :Noun; :hasLabel "PRO"; rdfs:label "pronoun".
+
+:CLF a :PartOfSpeech; :hasLabel "CLF"; rdfs:label "classifier".
+:V_PTCP a :Verb, :PropertyConcept; :hasGrammFunction :modification; :hasLabel "V.PTCP"; rdfs:label "participle", "verbal adjective".
+
+:V_MSDR a :Verb, :ActionConcept; :hasGrammFunction :reference; :hasLabel "V.MSDR"; rdfs:label "masdar", "verbal noun", "gerund", "action nominal".
+
+:V_CVB a :Verb, :ActionConcept; :hasGrammFunction :modification; :hasLabel "V.CVB"; rdfs:label "converb", "verbal adverb", "gerund", "adverbial participle".
+
+:ADV a :ActionConcept; :hasGrammFunction :modification; :hasLabel "ADV"; rdfs:label "adverb".
+	
+:AUX a :Verb; :hasLabel "AUX"; rdfs:label "auxiliary".
+	
+:COMP a :PartOfSpeech; :hasLabel "COMP"; rdfs:label "complementizer".
+
+:PART a :PartOfSpeech; :hasLabel "PART"; rdfs:label "particle".
+
+:INTJ a :PartOfSpeech; :hasLabel "INTJ"; rdfs:label "interjection".
+
+:Number rdfs:subClassOf :MorphFeature.
+	
+:SG a :Number; :hasLabel "SG"; rdfs:label "singular"; rdfs:comment """Singular always indicates one (Sylak-Glassman 2016, p.34)"""@en.
+:Plural rdfs:subClassOf :Number.
+:TRI a :Number; :hasLabel "TRI"; rdfs:label "trial".
+:PAUC a :Number; :hasLabel "PAUC"; rdfs:label "paucal".
+:GPAUC a :Number; :hasLabel "GPAUC"; rdfs:label "greater paucal".	
+
+:Mood rdfs:subClassOf :MorphFeature.
+
+:POS a :SpeculativeMood; :hasLabel "POT"; rdfs:label "potential mood".
+
+:ADM a :SpeculativeMood; :hasLabel "ADM"; rdfs:label "admirative mood".
+
+:ConditionalMood rdfs:subClassOf :Mood;
+	owl:versionInfo """From Sylak-Glassman's (2016, p.32f) paragraph on conditionals, interrupted by a description of simulative, we infer that these, together constititute a group with common characteristics""".
+	
+:COND a :ConditionalMood; :hasLabel "COND"; rdfs:label "conditional mood".
+:SIM a :ConditionalMood; :hasLabel "SIM"; rdfs:label "simulative mood".
+:COND_PROT a :ConditionalMood; :hasLabel "COND.PROT"; rdfs:label "conditional marking the protasis".
+:COND_APO a :ConditionalMood; :hasLabel "COND.APO"; rdfs:label "conditional marking the apodosis".
+	
+:PURP a :Mood; :hasLabel "PURP"; rdfs:label "purposive modality", "general purposive".
+
+:INTEN a :Mood; :hasLabel "INTEN"; rdfs:label "intentive".
+
+:OBLIG a :Mood; :hasLabel "OBLIG"; rdfs:label "obligative".
+
+:DEB a :Mood; :hasLabel "DEB"; rdfs:label "debitive", "debitive/obligative";
+	owl:versionInfo "Sylak-Glassman (2016, p.33) mentions the opposition permissive vs. debitive/obligative for Tamil, but provides no definition".
+:PERM a :Mood; :hasLabel "PERM"; rdfs:label "permissive";
+	owl:versionInfo "Sylak-Glassman (2016, p.33) mentions the opposition  permissive vs. debitive/obligative for Tamil, but provides no definition".
+:DED a :Mood; :hasLabel "DED"; rdfs:label "deductive", "deductive/inferential";
+	owl:versionInfo "Sylak-Glassman (2016, p.33) mentions the opposition speculative vs. deductive/inferential for Tamil, but provides no definition".
+:OPT a :Mood; :hasLabel "OPT"; rdfs:label "optative", "desiderative", "optative-desiderative".
+
+:LanguageSpecificFeature rdfs:subClassOf :MorphFeature.
+	
+:LGSPEC a :LanguageSpecificFeature; :hasLabelStartingWith "LGSPEC".
+
+:Interrogativity rdfs:subClassOf :MorphFeature.
+:DECL a :Interrogativity; :hasLabel "DECL"; rdfs:label "declarative".
+:INT a :Interrogativity; :hasLabel "INT"; rdfs:label "interrogative".
+
+:InformationStructureFeature rdfs:subClassOf :MorphFeature.
+	
+:TOP a :InformationStructureFeature; :hasLabel "TOP"; rdfs:label "topic".
+:FOC a :InformationStructureFeature; :hasLabel "FOC"; rdfs:label "focus".
+
+:Gender rdfs:subClassOf :MorphFeature;
+	rdfs:label "gender and noun class".
+	
+:MASC a :Gender; rdfs:label "masculine"; :hasLabel "MASC".
+:FEM a :Gender; rdfs:label "feminine"; :hasLabel "FEM".
+:NEUT a :Gender; rdfs:label "neuter"; :hasLabel "NEUT".
+:BANTU1 a :Gender; rdfs:label "Bantu Noun Class 1"; :hasLabel "BANTU1".
+:BANTU2 a :Gender; rdfs:label "Bantu Noun Class 2"; :hasLabel "BANTU2".
+:BANTU3 a :Gender; rdfs:label "Bantu Noun Class 3"; :hasLabel "BANTU3".
+:BANTU4 a :Gender; rdfs:label "Bantu Noun Class 4"; :hasLabel "BANTU4".
+:BANTU5 a :Gender; rdfs:label "Bantu Noun Class 5"; :hasLabel "BANTU5".
+:BANTU6 a :Gender; rdfs:label "Bantu Noun Class 6"; :hasLabel "BANTU6".
+:BANTU7 a :Gender; rdfs:label "Bantu Noun Class 7"; :hasLabel "BANTU7".
+:BANTU8 a :Gender; rdfs:label "Bantu Noun Class 8"; :hasLabel "BANTU8".
+:BANTU9 a :Gender; rdfs:label "Bantu Noun Class 9"; :hasLabel "BANTU9".
+:BANTU10 a :Gender; rdfs:label "Bantu Noun Class 10"; :hasLabel "BANTU10".
+:BANTU11 a :Gender; rdfs:label "Bantu Noun Class 11"; :hasLabel "BANTU11".
+:BANTU12 a :Gender; rdfs:label "Bantu Noun Class 12"; :hasLabel "BANTU12".
+:BANTU13 a :Gender; rdfs:label "Bantu Noun Class 13"; :hasLabel "BANTU13".
+:BANTU14 a :Gender; rdfs:label "Bantu Noun Class 14"; :hasLabel "BANTU14".
+:BANTU15 a :Gender; rdfs:label "Bantu Noun Class 15"; :hasLabel "BANTU15".
+:BANTU16 a :Gender; rdfs:label "Bantu Noun Class 16"; :hasLabel "BANTU16".
+:BANTU17 a :Gender; rdfs:label "Bantu Noun Class 17"; :hasLabel "BANTU17".
+:BANTU18 a :Gender; rdfs:label "Bantu Noun Class 18"; :hasLabel "BANTU18".
+:BANTU19 a :Gender; rdfs:label "Bantu Noun Class 19"; :hasLabel "BANTU19".
+:BANTU20 a :Gender; rdfs:label "Bantu Noun Class 20"; :hasLabel "BANTU20".
+:BANTU21 a :Gender; rdfs:label "Bantu Noun Class 21"; :hasLabel "BANTU21".
+:BANTU22 a :Gender; rdfs:label "Bantu Noun Class 22"; :hasLabel "BANTU22".
+:BANTU23 a :Gender; rdfs:label "Bantu Noun Class 23"; :hasLabel "BANTU23".
+:NAKH1 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 1"; :hasLabel "NAKH1".
+:NAKH2 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 2"; :hasLabel "NAKH2".
+:NAKH3 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 3"; :hasLabel "NAKH3".
+:NAKH4 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 4"; :hasLabel "NAKH4".
+:NAKH5 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 5"; :hasLabel "NAKH5".
+:NAKH6 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 6"; :hasLabel "NAKH6".
+:NAKH7 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 7"; :hasLabel "NAKH7".
+:NAKH8 a :Gender; rdfs:label "Nakh-Daghestanian Noun Class 8"; :hasLabel "NAKH8".
+
+:Finiteness rdfs:subClassOf :MorphFeature.
+	
+:FIN a :Finiteness; :hasLabel "FIN"; rdfs:label "finite".
+:NFIN a :Finiteness; :hasLabel "NFIN"; rdfs:label "nonfinite".
+
+:Evidentiality rdfs:subClassOf :MorphFeature.
+
+:FH a :Evidentiality; :hasLabel "FH"; rdfs:label "firsthand".
+:DRCT a :Evidentiality; :hasLabel "DRCT"; rdfs:label "direct".
+:SEN a :Evidentiality; :hasLabel "SEN"; rdfs:label "sensory".
+:VISU a :Evidentiality; :hasLabel "VISU"; rdfs:label "visual".
+:NVSEN a :Evidentiality; :hasLabel "NVSEN"; rdfs:label "non-visual sensory".
+:AUD a :Evidentiality; :hasLabel "AUD"; rdfs:label "auditory".
+:NFH a :Evidentiality; :hasLabel "NFH"; rdfs:label "non-firsthand".
+:QUOT a :Evidentiality; :hasLabel "QUOT"; rdfs:label "quotative".
+:RPRT a :Evidentiality; :hasLabel "RPRT"; rdfs:label "reported".
+:HRSY a :Evidentiality; :hasLabel "HRSY"; rdfs:label "hearsay".
+:INFER a :Evidentiality; :hasLabel "INFER"; rdfs:label "inferred".
+:ASSUM a :Evidentiality; :hasLabel "ASSUM"; rdfs:label "assumed".	
+
+:DeixisFeature rdfs:subClassOf :MorphFeature.
+
+:DistanceFeature rdfs:subClassOf :DeixisFeature.
+
+:PROX a :DistanceFeature; :hasLabel "PROX"; rdfs:label "proximate".
+:MED a :DistanceFeature; :hasLabel "MED"; rdfs:label "medial".
+:REMT a :DistanceFeature; :hasLabel "REMT"; rdfs:label "remote"; 
+	rdfs:comment """The term `remote' is used here for the greatest extent of distance while the term `distal' is reserved for a specific reference point distinction. (Sylak-Glassman 2016, p.22)"""@en.
+
+:ReferencePointFeature rdfs:subClassOf :DeixisFeature.
+:REF1 a :ReferencePointFeature; :hasLabel "REF1"; rdfs:label "first person reference point"; rdfs:comment "speaker as reference point (Sylak-Glassman 2016, p.22)"@en.
+:REF2 a :ReferencePointFeature; :hasLabel "REF2"; rdfs:label "second person reference point"; rdfs:comment "addressee as reference point (Sylak-Glassman 2016, p.22)"@en.
+:NOREF a :ReferencePointFeature; :hasLabel "NOREF"; rdfs:label "no reference point", "distal"; rdfs:comment "reference point not related to either speaker or addressee (distal) (Sylak-Glassman 2016, p.22)"@en.
+:PHOR a :ReferencePointFeature; :hasLabel "PHOR"; rdfs:label "phoric", "situated in discourse"; 
+	rdfs:comment "[The phoric] feature ... designates a pronoun as obligatorily referring to a referent that occurs in the discourse. Strictly speaking, anaphoric pronouns must refer to something that has previously occurred in discourse while a cataphoric pronoun would obligatorily refer to something that comes after it in the discourse. (Sylak-Glassman 2016, p.22f.)"@en.
+
+:Visibility rdfs:subClassOf :DeixisFeature.
+:VIS a :Visibility; :hasLabel "VIS"; rdfs:label "visible".
+:NVIS a :Visibility; :hasLabel "NVIS"; rdfs:label "invisible".
+
+:Verticality rdfs:subClassOf :DeixisFeature.
+	
+:ABV a :Verticality; :hasLabel "ABV"; rdfs:label "above".
+:EVEN a :Verticality; :hasLabel "EVEN"; rdfs:label "even".
+:BEL a :Verticality; :hasLabel "BEL"; rdfs:label "below".
+
+:Definiteness rdfs:subClassOf :MorphFeature.
+
+:CMPR a :Comparison; :hasLabel "CMPR"; rdfs:label "comparative".
+
+:EQTV a :Comparison; :hasLabel "EQTV"; rdfs:label "equative".
+	
+:Superlative rdfs:subClassOf :Comparison.
+
+:SPRL a :Superlative; :hasLabel "SPRL"; rdfs:label "superlative".
+:AB a :Superlative; :hasLabel "AB"; rdfs:label "absolute (for superlative)".
+:RL a :Superlative; :hasLabel "RL"; rdfs:label "relative (for superlative)".
+	
+:CoreCase rdfs:subClassOf :Case.
+
+:NOM a :CoreCase; :hasLabel "NOM"; rdfs:label "nominative";
+	rdfs:comment "Nominative (NOM), applies to S and A in Nominative-Accusative systems (Sylak-Glasman 2016, p.16)"@en.
+:ACC a :CoreCase; :hasLabel "ACC"; rdfs:label "accusative";
+	rdfs:comment "Accusative (ACC), applies to P in Nominative-Accusative systems (Sylak-Glasman 2016, p.16)"@en.
+:ERG a :CoreCase; :hasLabel "ERG"; rdfs:label "ergative";
+	rdfs:comment "Ergative (ERG), applies to A in Ergative-Absolutive systems (Sylak-Glasman 2016, p.16)"@en.
+:ABS a :CoreCase; :hasLabel "ABS"; rdfs:label "absolutive";
+	rdfs:comment "Absolutive (ABS), applies to S and P in Ergative-Absolutive systems (Sylak-Glasman 2016, p.16)"@en.
+:NOMS a :CoreCase; :hasLabel "NOMS"; rdfs:label "nominative, S-only";
+	rdfs:comment "Nominative, S-only (NOMS), applies to S in Tripartite systems (Sylak-Glasman 2016, p.16)"@en.
+
+:NonCoreCase rdfs:subClassOf :Case;
+	owl:disjointWith :CoreCase, :LocalCase.
+
+:VOC a :NonCoreCase; :hasLabel "VOC"; rdfs:label "vocative case".
+:COMPV a :NonCoreCase; :hasLabel "COMPV"; rdfs:label "comparative case".
+:EQTV a :NonCoreCase; :hasLabel "EQTV"; rdfs:label "equative case".
+:PRIV a :NonCoreCase; :hasLabel "PRIV"; rdfs:label "privative case", "abessive case".
+:PROPR a :NonCoreCase; :hasLabel "PROPR"; rdfs:label "proprietive case".
+:AVR a :NonCoreCase; :hasLabel "AVR"; rdfs:label "aversive case".
+:FRML a :NonCoreCase; :hasLabel "FRML"; rdfs:label "formal case", "essive-formal case".
+:TRANS a :NonCoreCase; :hasLabel "TRANS"; rdfs:label "translative case".
+:BYWAY a :NonCoreCase; :hasLabel "BYWAY"; rdfs:label "essive-modal case".
+	
+:InstrumentalCase rdfs:subClassOf :NonCoreCase.
+:INS a :InstrumentalCase; :hasLabel "INS"; rdfs:label "instrumental case".
+:COM a :InstrumentalCase; :hasLabel "COM"; rdfs:label "comitative case", "sociative case";	
+	rdfs:comment """The comitative (or sociative) case (COM) expresses accompaniment ("with"; Blake 2001:156) and its function is often subsumed within the instrumental case (e.g. Russian s Ivan-om `with John-ins'). (Sylak-Glasmann 2016, p.17)"""@en.
+
+	
+:GenitivalCase rdfs:subClassOf :NonCoreCase.
+	
+:GEN a :GenitivalCase; :hasLabel "GEN"; rdfs:label "genitive".
+:REL a :GenitivalCase; :hasLabel "REL"; rdfs:label "relative case".
+:PRT a :GenitivalCase; :hasLabel "PRT"; rdfs:label "partitive case".
+	
+:DativalCase rdfs:subClassOf :NonCoreCase.
+:DAT a :DativalCase; :hasLabel "DAT"; rdfs:label "dative case"; rdfs:comment """The dative case marks the indirect object, glossed as `to (indirect object)'. (Sylak-Glasman 2016, p.17)"""@en.
+:BEN a :DativalCase; :hasLabel "BEN"; rdfs:label "beneficiary case", "benefactive case"; 
+	rdfs:comment """The benefactive case marks a beneficiary of an action, glossed as `(a gift, e.g.) to, for (s.o.)'. (Sylak-Glasman 2016, p.17)"""@en.
+:PRP a :DativalCase; :hasLabel "PRP"; rdfs:label "purposive case"; 
+	rdfs:comment """The purposive case marks purpose of or reason for an action, glossed as `for (profit, e.g.)'. Note that this use of purposive is distinctive from general purposive modality (PURP) and the superordinate modality category purposive used in some Australian languages (AUPRP). (Sylak-Glasman 2016, p.17)"""@en.
+
+:LocalCase rdfs:subClassOf :Case;
+	owl:disjointWith :CoreCase, :NonCoreCase.
+	
+:PlaceMorpheme rdfs:subClassOf :LocalCase.
+
+:INTER a :PlaceMorpheme; :hasLabel "INTER"; rdfs:label "among".
+:AT a :PlaceMorpheme; :hasLabel "AT"; rdfs:label "at".
+:POST a :PlaceMorpheme; :hasLabel "POST"; rdfs:label "behind".
+:IN a :PlaceMorpheme; :hasLabel "IN"; rdfs:label "in".
+:CIRC a :PlaceMorpheme; :hasLabel "CIRC"; rdfs:label "near".
+:ANTE a :PlaceMorpheme; :hasLabel "ANTE"; rdfs:label "near, in front of".
+:APUD a :PlaceMorpheme; :hasLabel "APUD"; rdfs:label "next".
+:ON a :PlaceMorpheme; :hasLabel "ON"; rdfs:label "on".
+:ONHR a :PlaceMorpheme; :hasLabel "ONHR"; rdfs:label "on (horizontal)".
+:ONVR a :PlaceMorpheme; :hasLabel "ONVR"; rdfs:label "on (vertical)".
+:SUB a :PlaceMorpheme; :hasLabel "SUB"; rdfs:label "under".
+	
+:DistalMorpheme rdfs:subClassOf :PlaceMorpheme.
+:REM a :DistalMorpheme; :hasLabel "REM"; rdfs:label "distal"; 
+	rdfs:comment """Note that the Distal and Proximate morphemes, REM and PROXM here, are identical to the Remote and Proximate morphemes specified for making distinctions among demonstratives (...) This is not accidental. Radkevich (2010:40-42) notes that `orientation morphemes' with meanings much like those of demonstrative pronouns are directly affixed to nouns bearing local case morphology in Tabassaran, suggesting that in some languages, these domains of morphology may overlap. Moreover, the semantics of the distal/remote and proximate morphemes are the same for local cases and for demonstratives. Distal local case and remoteness on pronouns both indicate that the thing involved is distant from the speaker while proximate morphemes in both categories indicate the opposite. (Sylak-Glassman 2016, p.19)"""@en.
+:PROXM a :DistalMorpheme; :hasLabel "PROXM"; rdfs:label "proximate".
+	
+:MotionMorpheme rdfs:subClassOf :LocalCase.
+:ESS a :MotionMorpheme; :hasLabel "ESS"; rdfs:label "essive"; rdfs:comment """Essive indicates static location with no motion (Sylak-Glassman 2016, p.19)"""@en.
+:ALL a :MotionMorpheme; :hasLabel "ALL"; rdfs:label "allative"; rdfs:comment """Allative indicates motion toward a source (Sylak-Glassman 2016, p.19)"""@en.
+:ABL a :MotionMorpheme; :hasLabel "ABL"; rdfs:label "ablative"; rdfs:comment """Ablative indicates motion away from a source (Sylak-Glassman 2016, p.19)"""@en.
+
+:AspectMorpheme rdfs:subClassOf :MotionMorpheme.
+
+:APPRX a :AspectMorpheme; :hasLabel "APPRX"; rdfs:label "approximative"; 
+	rdfs:comment """Approximative case denotes a movement that is directed towards something but does not reach its goal (i.e. incompletive aspect). Grammatical descriptions ... point out that this case is used to emphasize that movement does not reach its goal. (Sylak-Glassman 2016, p.19)"""@en.
+:TERM a :AspectMorpheme; :hasLabel "TERM"; rdfs:label "terminative".
+:PROL a :AspectMorpheme; :hasLabel "PROL"; rdfs:label "prolative", "translative"; 
+	rdfs:comment """[T]he prolative/translative case ... indicates motion "along" or "across" a referent point. (Sylak-Glassman 2016, p.19)"""@en.
+:VERS a :AspectMorpheme; :hasLabel "VERS"; rdfs:label "versative".
+	
+:Aspect rdfs:subClassOf :MorphFeature.
+
+:ImperfectiveAspect rdfs:subClassOf :Aspect.
+
+:IPFV a :ImperfectiveAspect; :hasLabel "IPFV"; rdfs:label "imperfective aspect".
+:PROG a :ImperfectiveAspect; :hasLabel "PROG"; rdfs:label "progressive aspect".
+
+:PROSP a :Aspect; :hasLabel "PROSP"; rdfs:label "prospective aspect".
+
+:IterativeAspect rdfs:subClassOf :Aspect.
+
+:ITER a :IterativeAspect; :hasLabel "ITER"; rdfs:label "iterative aspect".
+	
+:HAB a :IterativeAspect; :hasLabel "habitual aspect".
+	
+:PFV a :Aspect; :hasLabel "PFV"; rdfs:label "perfective aspect".
+	
+:PRF a :Aspect; :hasLabel "PRF"; rdfs:label "perfect aspect".
+	
+:Animacy rdf:type owl:Class;
+	rdfs:subClassOf :MorphFeature.
+:INAN a :Inanimate; :hasLabel "INAN".
+
+:Animate rdfs:subClassOf :Animacy;
+	owl:disjointWith :Inanimate.
+:ANIM a :Animate; :hasLabel "ANIM".
+
+:Human rdfs:subClassOf :Animate.
+
+
+
+###  http://purl.org/olia/unimorph.owl#Atelic
+
+:Atelic rdf:type owl:Class ;
+        
+        rdfs:subClassOf :Dynamic ;
+        
+        owl:disjointWith :Telic .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Durative
+
+:Durative rdf:type owl:Class ;
+          
+          rdfs:subClassOf :Dynamic ;
+          
+          owl:disjointWith :Punctual .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Dynamic
+
+:Dynamic rdf:type owl:Class ;
+         
+         rdfs:subClassOf :Aktionsart ;
+         
+         owl:disjointWith :Stative .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Feature
+
+:MorphFeature rdf:type owl:Class .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Punctual
+
+:Punctual rdf:type owl:Class ;
+          
+          rdfs:subClassOf :Dynamic .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Stative
+
+:Stative rdf:type owl:Class ;
+         
+         rdfs:subClassOf :Aktionsart .
+
+
+
+###  http://purl.org/olia/unimorph.owl#Telic
+
+:Telic rdf:type owl:Class ;
+       
+       rdfs:subClassOf :Dynamic .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://purl.org/olia/unimorph.owl#ACCMP
+
+:ACCMP rdf:type :Durative ,
+                :Telic ,
+                owl:Thing ;
+       
+       rdfs:label "accomplishment"@en ;
+       
+       :hasLabel "ACCMP" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#ACH
+
+:ACH rdf:type :Punctual ,
+              :Telic ,
+              owl:Thing ;
+     
+     rdfs:label "achievement"@en ;
+     
+     :hasLabel "ACH" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#ACTY
+
+:ACTY rdf:type :Atelic ,
+               :Durative ,
+               owl:Thing ;
+      
+      rdfs:label "activity"@en ;
+      
+      :hasLabel "ACTY" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#ATEL
+
+:ATEL rdf:type :Atelic ,
+               owl:Thing ;
+      
+      :hasLabel "ATEL" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#DUR
+
+:DUR rdf:type :Durative ,
+              owl:Thing ;
+     
+     :hasLabel "DUR" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#DYN
+
+:DYN rdf:type :Dynamic ,
+              owl:Thing ;
+     
+     :hasLabel "DYN" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#PCT
+
+:PCT rdf:type :Punctual ,
+              owl:Thing ;
+     
+     :hasLabel "PCT" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#SEMEL
+
+:SEMEL rdf:type :Atelic ,
+                :Punctual ,
+                owl:Thing ;
+       
+       rdfs:label "semelfactive"@en ;
+       
+       :hasLabel "SEMEL" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#STAT
+
+:STAT rdf:type :Stative ,
+               owl:Thing ;
+      
+      :hasLabel "STAT" .
+
+
+
+###  http://purl.org/olia/unimorph.owl#TEL
+
+:TEL rdf:type :Telic ,
+              owl:Thing ;
+     
+     :hasLabel "TEL" .
+
+
+
