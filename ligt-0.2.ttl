@@ -15,6 +15,7 @@
 # 2017-03-25 ligt:Document *rdfs:subClassOf* ligt:Element (CC)
 # 2018-01-12 introduction of ligt:UtteranceSet; now not only coherent texts can be modeled (MI)
 # 2019-03-25 TTL+unicode validation (CC)
+# 2019 09-20 [draft] Further development of sets of single examples modeling. Validation on APiCS and MSU fieldwork elicitations (MI)
 
 # contributors
 # CC - Christian Chiarcos, christian.chiarcos@web.de
@@ -44,15 +45,20 @@ ligt:hasText a owl:ObjectProperty;
 	rdfs:range ligt:InterlinearText;
 	rdfs:comment "ligt:hasText assignes a ligt:Document one or multiple texts."@en.
 
-ligt:hasUtterance a owl:ObjectProperty;
-	rdfs:domain ligt:UtteranceGroup;
-	rdfs:range ligt:Utterance;
-	rdfs:comment "ligt:hasUtterance assignes a ligt:UtteranceGroup one or more utterances."@en.
-	# TODO: Add handling for the sets of closely related utterances
+ligt:hasUtterances a owl:ObjectProperty;
+	rdfs:domain ligt:Document;
+	rdfs:range ligt:InterlinearCollection;
+	rdfs:comment "ligt:hasUtterance assigns a ligt:Document one or more utterances. This allows representing isolated examples (e.g. APiCS or ODIN database)"@en.
 
 ligt:InterlinearText a rdfs:Class;
     rdfs:subClassOf ligt:Segment;
-    rdfs:comment "A text represents a coherent assemblage of (mostly) consecutive utterances between which meaning relations can be established. In this function, ligt:InterlinearText corresponds to flex:interlinear-text. No Xigt counterpart because Xigt has not been designed for annotating full documents but rather isolated examples harvested from the literature. Nevertheless, this element is obligatory."@en.
+    rdfs:comment "A text represents a coherent assemblage of (mostly) consecutive utterances between which meaning relations can be established. In this function, ligt:InterlinearText corresponds to flex:interlinear-text. No Xigt counterpart because Xigt has not been designed for annotating full documents but rather isolated examples harvested from the literature. In these cases, ligt:Document is linked to ligt:UtteranceGroup."@en.
+
+ligt:InterlinearCollection a rdfs:Class;
+	rdfs:subClassOf ligt:Segment;
+	rdfs:comment "A collection represents a group of separate, usually non-consecutive utterances (ligt:Utterance) not linked to each by meaning. They can be a set of examples demonstrating some grammatical phenomenon, a collection of elicitations, or even a full database, e.g. APiCS. No Xigt counterpart although they are parallel to a list of all xigt:igt. No FLEx counterpart because FLEx has been designed for annotating coherent texts"@en.
+	# TODO: probably, it should not be a subClassOf ligt:Segemtn because I don't think it should be segemented into paragraphs. On the other hand, segmentation of InterlinearCollection is handy. (MI)
+	# TODO: check the last sentence, maybe it's not always true (MI)
 
 ligt:Segment rdfs:subClassOf ligt:Element;
     rdfs:comment "Segment is a generalization over text-structural units at and above the level of individual glossed examples (utterances). In Toolbox, such elements can be added as free text (albeit no standard formalism exists). In FLex, these are flex:interlinear-text, flex:paragraph and flex:phrase."@en.
@@ -65,20 +71,11 @@ ligt:subSegment a owl:ObjectProperty;
 ligt:nextSegment a owl:ObjectProperty;
 	rdfs:range ligt:Segment;
 	rdfs:domain ligt:Segment;
-	rdfs:comment "ligt:nextSegment should only hold between segments of the same type, or on the same hierarchy level, cf. ./following-sibling::*[1] in XPath."@en.
+	rdfs:comment "ligt:nextSegment should only hold between segments of the same type, or on the same hierarchy level, cf. ./following-sibling::*[1] in XPath. For ligt:InterlinearCollection may be omitted."@en.
 	
 ligt:Paragraph a rdfs:Class;
     rdfs:subClassOf ligt:Segment;
     rdfs:comment "In written text, a paragraph represents a unit of text not divided by manual line breaks. In other modalities, a paragraph can be defined as a group of utterances in discourse that are thematically closely related, e.g., sharing the same theme or topic. ligt:Paragraph is derived from flex:Paragraph."@en.
-
-ligt:UtteranceGroup a rdfs:Class;
-	rdfs:subClassOf ligt:Segment;
-	rdfs:comment "A group of separate utterances (ligt:Utterance)."@en.
-	#TODO: rdfs:comment "A group of separate utterances (ligt:Utterance) and sets of utterances (ligt:UtteranceSet)."@en.
-
-#ligt:UtteranceSet a rdfs:Class;
-#	rdfs:subClassOf ligt:Segment;
-#	rdfs:comment "A set of ligt:Utterance, it represents a set of examples, e.g. to demonstrate grammaticality judgements for similar sentences variying only in some aspect"@en.
 
 ligt:Utterance a rdfs:Class;
     rdfs:subClassOf ligt:Segment;
@@ -202,8 +199,9 @@ ligt:refBody a owl:ObjectProperty;
 #############
 
 ligt:Document rdfs:subClassOf dc:Dataset.
-ligt:UtteranceSet rdfs:subClassOf dc:Dataset.
+ligt:InterlinearCollection rdfs:subClassOf dc:Dataset.
 ligt:hasText rdfs:subPropertyOf dc:hasPart.
+ligt:hasUtterances rdfs:subPropertyOf dc:hasPart.
 ligt:InterlinearText rdfs:subClassOf dc:Text.
 
 # NLP Interchange Format
