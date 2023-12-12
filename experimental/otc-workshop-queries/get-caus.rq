@@ -1,0 +1,14 @@
+PREFIX ligt: <http://purl.org/ligt/ligt-0.3#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT (group_concat(?gram; separator=" | ") as ?grams) ?morph_val ?lang ?doc
+{
+	?doc a ligt:Document ;
+	     ligt:hasUtterances/ligt:utterance/ligt:hasMorphs/ligt:item ?s .
+	?s a ligt:Morph ;
+	   rdfs:label ?gram ;
+	   ligt:gloss ?morph_val .
+
+	   BIND(LANG(?gram) AS ?lang)
+	   FILTER(REGEX(?morph_val, "CAUS"))
+} GROUP BY ?lang ?doc ?morph_val LIMIT 100

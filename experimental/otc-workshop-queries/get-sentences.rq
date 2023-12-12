@@ -1,0 +1,9 @@
+PREFIX ligt: <http://purl.org/ligt/ligt-0.3#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?sentence ?translation
+{
+	?s a ligt:Utterance ;
+	   rdfs:label ?sentence ;
+	   ligt:translation ?translation .
+} LIMIT 10

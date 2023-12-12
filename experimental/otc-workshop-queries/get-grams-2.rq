@@ -1,0 +1,13 @@
+PREFIX ligt: <http://purl.org/ligt/ligt-0.3#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?gram ?lang ?doc
+{
+	?doc a ligt:Document ;
+	     ligt:hasUtterances/ligt:utterance/ligt:hasMorphs/ligt:item ?s .
+	?s a ligt:Morph ;
+	   rdfs:label ?gram ;
+	   ligt:gloss "1SG"@en .
+
+	   BIND(LANG(?gram) AS ?lang)
+} LIMIT 10

@@ -1,0 +1,11 @@
+PREFIX ligt: <http://purl.org/ligt/ligt-0.3#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT (group_concat(DISTINCT ?tr; separator=" | ") as ?tr) ?lang ?doc
+{
+	?s a ligt:Morph ;
+	   rdfs:label ?tr ;
+	   ligt:gloss "woman"@en .
+
+	   BIND(LANG(?tr) AS ?lang)
+} GROUP BY ?lang ?doc LIMIT 100

@@ -1,0 +1,10 @@
+[
+{"morph_val":"\"CAUS\"@en","doc":"https://raw.githubusercontent.com/cldf-datasets/levshinadifferentialmarking/v1.0.0/cldf/examples.csv","lang":"\"rap\"","grams":"\"haka | haka\""},
+{"morph_val":"\"CAUS\"@en","doc":"https://raw.githubusercontent.com/cldf-datasets/levshinadifferentialmarking/v1.0.0/cldf/examples.csv","lang":"\"sci\"","grams":"\"kang\""},
+{"morph_val":"\"CAUS.PFV\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"njo\"","grams":"\"takstsɨ | taktsɨ | taktsɨ\""},
+{"morph_val":"\"CAUS\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"vma\"","grams":"\"ir\""},
+{"morph_val":"\"CAUS\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"kum\"","grams":"\"t\""},
+{"morph_val":"\"CAUS\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"njo\"","grams":"\"taktsɨ | takstsɨ\""},
+{"morph_val":"\"CAUS\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"huc\"","grams":"\"kí\""},
+{"morph_val":"\"IPFV:N3AUG.S/A:CAUS\"@en","doc":"https://grambank.clld.org/parameters/","lang":"\"ngr\"","grams":"\"pa\""}
+]
